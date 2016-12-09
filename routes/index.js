@@ -42,6 +42,8 @@ module.exports = function(passport) {
     /* GET Home Page */
     router.get('/home', isAuthenticated, function(req, res) {
         showrepo.getSeries(function(err, show) {
+            console.log(err);
+            console.log(show);
             res.render('home', {
                 title: 'express',
                 user: req.user,

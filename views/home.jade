@@ -13,8 +13,11 @@ block content
 								li First Name ---> #{user.firstName} 
 								li Last Name ---> #{user.lastName}
 		div.row
-			for sh in show
-				div.col-sm-6
-						p #{sh.SeriesName}
-						img(src='http://thetvdb.com/banners/#{sh.banner}', width='500', height='150')
+			p #{show.results[0].name}
+		div.row
+			each sh in show.results
+					div.col-sm-6
+						p #{sh.popularity}
+						p #{sh.name}
+						img(src='https://image.tmdb.org/t/p/w300_and_h450_bestv2#{sh.poster_path}')
 									
