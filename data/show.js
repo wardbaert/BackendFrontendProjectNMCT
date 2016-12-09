@@ -1,22 +1,27 @@
-var request = require("request")
+var Client = require("node-tvdb");
+var tvdb = new Client("277BCE9339B4CAD9"); // lang defaults to "en" 
 
-var options = {
-    host: 'api.thetvdb.com',
-    path: '/login',
-    method: 'POST',
-    json: true,
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-    body: '{"apikey":"277BCE9339B4CAD9"}'
-};
+showrepo = (function() {
+    var getSeries = function(next) {
+        tvdb.getSeriesByName("Thrones", function(err, serie) {
+            console.log(err, serie);
+            next(err, serie);
+        });
+    };
 
-var req = https.request(options, function(res) {
-    console.log('STATUS: ' + res.statusCode);
-    console.log('HEADERS: ' + JSON.stringify(res.headers));
-    res.setEncoding('utf8');
-    res.on('data', function(chunk) {
-        console.log('BODY: ' + chunk);
+    return {
+        getSeries: getSeries
+    };
+})();
 
-        //res1.writeHead(200, {'Content-Type': 'application/json'});
-        res1.end('Hello World NodeJS \n' + chunk);
-    });
-});
+module.exports = showrepo;
+
+
+/*showRepo = (function() {
+    var getSeries = function() {
+        
+        tvdb.getSeriesByName("The Simpsons", function(err, response) {
+            return response;
+        });
+    };
+}*/

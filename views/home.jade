@@ -3,13 +3,18 @@ extends layout
 block content
 	div.container
 		div.row
-			div.col-sm-6.col-md-4.col-md-offset-4
+			div.col-sm-6.col-md-4.col-md-offset-10
 				#user
-					h1.text-center.login-title Welcome #{user.firstName}. Check your details below:
-						div.signup-wall
+					p: #[span Welcome #{user.firstName}] #[a(href='/signout', title='sign out') Sign out]					
+						//-div.signup-wall
 							ul.user-details
 								li Username ---> #{user.username}
 								li Email    ---> #{user.email}
 								li First Name ---> #{user.firstName} 
 								li Last Name ---> #{user.lastName}
-						a(href='/signout', class='text-center new-account') Sign Out
+		div.row
+			for sh in show
+				div.col-sm-6
+						p #{sh.SeriesName}
+						img(src='http://thetvdb.com/banners/#{sh.banner}', width='500', height='150')
+									

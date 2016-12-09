@@ -32,21 +32,23 @@ app.use(express.static(path.join(__dirname, 'public')));
 var passport = require('passport');
 var expressSession = require('express-session');
 // TODO - Why Do we need this key ?
-app.use(expressSession({secret: 'seriforlife'}));
+app.use(expressSession({ secret: 'seriforlife' }));
 app.use(passport.initialize());
 app.use(passport.session());
 
- // Using the flash middleware provided by connect-flash to store messages in session
- // and displaying in templates
+// Using the flash middleware provided by connect-flash to store messages in session
+// and displaying in templates
 var flash = require('connect-flash');
 app.use(flash());
 
 // Initialize Passport
-var initPassport = require('./passport/init');
+var initPassport = require('./data/init');
 initPassport(passport);
 
 var routes = require('./routes/index')(passport);
 app.use('/', routes);
+
+console.log("iets");
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
