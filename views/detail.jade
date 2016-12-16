@@ -12,16 +12,13 @@ block content
 								li Email    ---> #{user.email}
 								li First Name ---> #{user.firstName} 
 								li Last Name ---> #{user.lastName}
-			else
 		div.row
-			each sh in show.results
+			h1 #{show.name}
+			each season in show.seasons
 					div.col-sm-6
 						div.thumbnail.clearfix
-							img.pull-left(src='https://image.tmdb.org/t/p/w185#{sh.poster_path}')
+							img.pull-left(src='https://image.tmdb.org/t/p/w185#{season.poster_path}')
 							div.caption
-								h4 #{sh.name}
-								p #{sh.overview}
-								span.glyphicon.glyphicon-star
-									#{sh.vote_average}
-								a(href='/detail/' + sh.id).btn.btn-default edit
-						
+								h4 Season number #{season.season_number}
+								p Episodes: #{season.episode_count}
+								a(href='/seasondetail/' + show.id +"/"+ season.season_number).btn.btn-default info

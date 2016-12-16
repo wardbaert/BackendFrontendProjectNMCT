@@ -14,10 +14,23 @@ var isAuthenticated = function(req, res, next) {
 
 module.exports = function(passport) {
 
-    /* GET login page. */
+    /* GET index page. */
     router.get('/', function(req, res) {
+        showrepo.getSeries(function(err, show) {
+            console.log(err);
+            console.log(show);
+            res.render('index', {
+                title: 'express',
+                user: req.user,
+                show: show
+            });
+        });
+    });
+
+     /* GET login page. */
+    router.get('/login', function(req, res) {
         // Display the Login page with any flash message, if any
-        res.render('index', { message: req.flash('message') });
+        res.render('login', { message: req.flash('message') });
     });
 
     /* Handle Login POST */
@@ -51,6 +64,28 @@ module.exports = function(passport) {
             });
         });
     });
+
+    router.get('/detail/:id', function( req, res) {
+		showrepo.getSeriesById(req.params.id, function (err, show) {
+			console.log(show);
+            if (err) {
+                res.status(500).send('Server error occured while requesting ticket.');
+                res.end();
+            }
+            res.render('detail',{user: req.user, show: show} );
+        });
+	});
+
+    router.get('/seasondetail/:sid/:seid', function( req, res) {
+		showrepo.getSeasonById(req.params.sid, req.params.seid, function (err, show) {
+			console.log(show);
+            if (err) {
+                res.status(500).send('Server error occured while requesting ticket.');
+                res.end();
+            }
+            res.render('seasondetail',{user: req.user, show: show} );
+        });
+	});
 
 
     /* Handle Logout */

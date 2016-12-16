@@ -26,8 +26,23 @@ showrepo = (function() {
         });
     };
 
+    var getSeriesById = function(id, next){
+        MovieDB.tvInfo({id: id}, function(err, serie) {
+            console.log(err, serie);
+            next(err, serie);
+        });
+    }
+
+    var getSeasonById = function(sid, seid, next){
+     MovieDB.tvSeasonInfo({season_number: seid}, {id: sid},function(err, serie){
+            console.log(serie);
+            next(err, serie);
+        });
+    }
     return {
-        getSeries: getSeries
+        getSeasonById: getSeasonById,
+        getSeries: getSeries,
+        getSeriesById: getSeriesById
     };
 })();
 
