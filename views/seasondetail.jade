@@ -1,0 +1,23 @@
+extends layout
+block content
+	div.container
+		div.row
+			div.col-sm-6.col-md-4.col-md-offset-10
+			if user
+				#user
+					p: #[span Welcome #{user.firstName}] #[a(href='/signout', title='sign out') Sign out]
+						//-div.signup-wall
+							ul.user-details
+								li Username ---> #{user.username}
+								li Email    ---> #{user.email}
+								li First Name ---> #{user.firstName}
+								li Last Name ---> #{user.lastName}
+		div.row
+			each episode in show.episodes
+					div.col-sm-6
+						div.thumbnail.clearfix
+							img.pull-left(src='https://image.tmdb.org/t/p/w185#{episode.still_path}')
+							div.caption 
+								h4 #{episode.episode_number})  #{episode.name} 
+								p #{episode.overview}
+								a(href='/episodedetail/' + show.id +"/"+ show.season_number+"/"+episode.episode_number).btn.btn-default info

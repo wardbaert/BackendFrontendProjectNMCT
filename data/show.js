@@ -34,7 +34,7 @@ showrepo = (function() {
     }
 
     var getSeasonById = function(sid, seid, next){
-     MovieDB.tvSeasonInfo({season_number: seid}, {id: sid},function(err, serie){
+     MovieDB.tvSeasonInfo({season_number: seid, id: sid},function(err, serie){
             console.log(serie);
             next(err, serie);
         });
