@@ -9,7 +9,6 @@ var checkLength = function(val) {
 };
 
 var UserSchema = new mongoose.Schema({
-    userName: { type: String, unique: true },
     firstName: String,
     lastName: String,
     email: {
@@ -20,6 +19,8 @@ var UserSchema = new mongoose.Schema({
             message: "{PATH}: Minstens 10 karakters"
         }
     },
+    password: String,
+    username: String,
     series: [
         WatchedSeriesSchema
     ]
