@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 
 //nested Schema
 var WatchedSeriesSchema = new mongoose.Schema({
-    _id: Number,
+    seriesID: Number,
     EpisodesWatched: [{
         _id: Number,
         seasonid: Number,

@@ -1,17 +1,18 @@
 var mongoose = require("mongoose");
-var initializer = require("../initializerCollections");
-var Promise = require("q");
+var WatchedSeriesSchema = require("../schemas/watchedSeries");
+//var initializer = require("../initializerCollections");
+//var Promise = require("q");
 
-var UsersRepo = (function () {
+var UsersRepo = (function() {
     var User = require("./user.js");
-     
-    var getAllUsers = function (callback) {
+
+    /*   var getAllUsers = function (callback) {
         User.find({}).sort('lastName').exec(function (err, docs) {
             if (err) {
                 console.log(err);
                 callback(err, null);
             }
-
+ 
             callback(null, docs);
         });
     },
@@ -27,14 +28,90 @@ var UsersRepo = (function () {
                 if (err) { return next(err); }
                 next();
             });
-        }  ;
-    
+}  ;*/
+
+    /*var updateSeriesUser = function (user, id, next){
+    console.log("show.js//  " + user+ " //" + "serieId//  "+ id)+" //";
+        var query ={_id: user};
+        var update ={
+             serie: id
+        };
+        var upsert ={upsert: true};
+        User.findOneAndUpdate(query, update,upsert, function (err, user){
+            if (err) {
+                console.log(err);
+                next(err, null);
+            }
+            next(null, user);
+}),
+// add season id if season doesn't exist
+    /*    var query = {_id: user};
+        var update = {
+series: {$nin: [id]}},
+            {$push: {'series':{
+                WatchedSeriesSchema:[{
+                    id:id,
+                    EpisodesWatched:[]      
+                }]}}}
+};*/
+    /*
+    console.log("USER: " + user +" ID "+id);
+            User.update(
+                {_id: user, series: {$nin: [id]}},
+                {$push: {'series':{
+                    WatchedSeriesSchema:[{
+                        _id:id,
+                        EpisodesWatched:[{}]      
+                    }]}}},
+                {upsert: true},function (err, user){
+                if (err) {
+                    console.log(err);
+                    next(err, null);
+                }
+                next(null, user);
+            });
+    },*/
+    //werkt nog niet volledig
+    /*
+    getSeriesByUser = function(user) {
+            var UsersSeries = [];
+            user.series.forEach(function(element) {
+                MovieDB.tvInfo({ id: element.id }, function(err, serie) {
+                    UsersSeries.push(serie);
+                    console.log("#serie " + serie);
+                    next(err, UsersSeries);
+                });
+            });
+        },
+        */
+    updateSeriesUser = function(userid, seriesid) {
+        var query = { _id: userid, 'series.seriesID': { '$ne': seriesid } };
+        var series = { seriesID: seriesid, EpisodesWatched: [] };
+        var update = { $push: { 'series': series } };
+
+        User.findOneAndUpdate(query, update, { new: true }, function(error, doc) {
+            if (error) { console.log(error); } else { console.log(doc); }
+        });
+    };
+    /*updateSeriesUser = function(userid, seriesid) {
+      console.log("USER: " + userid +" ID "+seriesid);
+        var query = { _id: userid };
+        var update = { $push: {
+            'series':{ WatchedSeriesSchema:[{id: seriesid}]}
+            } };
+ 
+        User.findOneAndUpdate(query, update, true, function(error, doc) {
+            if (error) {  console.log(error); } else { console.log("DOC "+doc); }
+        });
+    };*/
     return {
-        model :User ,
-        getAllUsers: getAllUsers,
-        findUserById: findUserById,
-        createUser: createUser
+        model: User,
+        /* getAllUsers: getAllUsers,
+         findUserById: findUserById,
+         createUser: createUser,*/
+        updateSeriesUser: updateSeriesUser
     };
 })();
+
 
 module.exports = UsersRepo;

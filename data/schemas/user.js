@@ -21,9 +21,7 @@ var UserSchema = new mongoose.Schema({
     },
     password: String,
     username: String,
-    series: [
-        WatchedSeriesSchema
-    ]
+    series: [WatchedSeriesSchema]
 });
 
 module.exports = UserSchema;

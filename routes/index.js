@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var userrepo = require('../data/models/usersRepo');
 var showrepo = require('../data/models/show');
 
 var isAuthenticated = function(req, res, next) {
@@ -64,7 +65,17 @@ module.exports = function(passport) {
             });
         });
     });
-
+    router.post('/detail/:_id/:id', isAuthenticated, function(req, res) {
+        console.log("teeest");
+        userrepo.updateSeriesUser(req.params._id, req.params.id, function(err, user) {
+            // console.log(user);
+            if (err) {
+                res.status(500).send('Server error occured while requesting ticket.');
+                res.end();
+            }
+            res.redirect("/");
+        })
+    });
     router.get('/detail/:id', function(req, res) {
         showrepo.getSeriesById(req.params.id, function(err, show) {
             console.log(show);

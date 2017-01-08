@@ -24,4 +24,8 @@ block content
 								span.glyphicon.glyphicon-star
 									#{sh.vote_average}
 								a(href='/detail/' + sh.id).btn.btn-default edit
+								if user
+									form(action='/detail/' + user._id + "/" + sh.id, method="post", role="form")
+										.form-group
+											input(type="submit" value="Submit").btn.btn-default
 						
