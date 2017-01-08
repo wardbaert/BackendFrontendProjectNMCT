@@ -84,15 +84,24 @@ series: {$nin: [id]}},
             });
         },
         */
-    updateSeriesUser = function(userid, seriesid) {
-        var query = { _id: userid, 'series.seriesID': { '$ne': seriesid } };
-        var series = { seriesID: seriesid, EpisodesWatched: [] };
-        var update = { $push: { 'series': series } };
+    var updateSeriesUser = function(userid, seriesid) {
+            var query = { _id: userid, 'series.seriesID': { '$ne': seriesid } };
+            var series = { seriesID: seriesid, EpisodesWatched: [] };
+            var update = { $push: { 'series': series } };
 
-        User.findOneAndUpdate(query, update, { new: true }, function(error, doc) {
-            if (error) { console.log(error); } else { console.log(doc); }
-        });
-    };
+            User.findOneAndUpdate(query, update, { new: true }, function(error, doc) {
+                if (error) { console.log(error); } else { console.log(doc); }
+            });
+        },
+        markEpisodeAsWatched = function(userid, seriesid, seasonid, episodeid) {
+            var query = { _id: userid, 'series.seriesID': seriesid, 'series.EpisodesWatched._id': { '$ne': episodeid }, 'series.EpisodesWatched.seasonid': seasonid };
+            var watchedepisode = { _id: episodeid, seasonid: seasonid, skipped: false };
+            var update = { $push: { 'series.EpisodesWatched': watchedepisode } };
+
+            user.findOneAndUpdate(query, update, { new: true }, function(error, doc) {
+                if (error) { console.log(error); } else { console.log(doc); }
+            });
+        };
     /*updateSeriesUser = function(userid, seriesid) {
       console.log("USER: " + userid +" ID "+seriesid);
         var query = { _id: userid };
@@ -109,7 +118,8 @@ series: {$nin: [id]}},
         /* getAllUsers: getAllUsers,
          findUserById: findUserById,
          createUser: createUser,*/
-        updateSeriesUser: updateSeriesUser
+        updateSeriesUser: updateSeriesUser,
+        markEpisodeAsWatched: markEpisodeAsWatched
     };
 })();
 
