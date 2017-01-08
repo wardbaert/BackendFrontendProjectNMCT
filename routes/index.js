@@ -97,8 +97,17 @@ module.exports = function(passport) {
             res.render('seasondetail', { user: req.user, show: show });
         });
     });
-
-
+router.post('/episodedetail/:_id/:id/:sid/:eid', isAuthenticated, function(req, res) {
+        console.log("teeest");
+        userrepo.markEpisodeAsWatched(req.params._id, req.params.id,req.params.sid,req.params.eid, function(err, user) {
+            // console.log(user);
+            if (err) {
+                res.status(500).send('Server error occured while requesting ticket.');
+                res.end();
+            }
+            res.redirect("/");
+        })
+    });
     /* Handle Logout */
     router.get('/signout', function(req, res) {
         req.logout();

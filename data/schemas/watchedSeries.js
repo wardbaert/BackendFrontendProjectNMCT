@@ -5,8 +5,8 @@ var mongoose = require('mongoose');
 var WatchedSeriesSchema = new mongoose.Schema({
     seriesID: Number,
     EpisodesWatched: [{
-        _id: Number,
-        seasonid: Number,
+        episodeID: Number,
+        seasonID: Number,
         skipped: Boolean
     }]
 });
