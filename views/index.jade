@@ -16,6 +16,8 @@ block content
 								li Last Name ---> #{user.lastName}
 			else
 		div.row
+			if user
+				- var shows = user.series.map(function(c) { return c.seriesID })
 			each sh in show.results
 					div.col-sm-6
 						div.thumbnail.clearfix
@@ -27,7 +29,11 @@ block content
 									#{sh.vote_average}
 								a(href='/detail/' + sh.id).btn.btn-default edit
 								if user
-									form(action='/detail/' + user._id + "/" + sh.id, method="post", role="form")
-										.form-group
-											input(type="submit" value="Submit").btn.btn-default
-						
+									if (shows.indexOf(sh.id) === -1)
+										form(action='/detail/' + user._id + "/" + sh.id, method="post", role="form")
+											.form-group
+												input(type="submit" value="Follow").btn.btn-default
+									else
+										form(action='/detail/' + user._id + "/" + sh.id, method="post", role="form")
+											.form-group
+												input(type="submit" value="unFollow").btn.btn-default
