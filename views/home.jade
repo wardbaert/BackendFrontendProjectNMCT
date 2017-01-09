@@ -13,9 +13,7 @@ block content
 								li First Name ---> #{user.firstName} 
 								li Last Name ---> #{user.lastName}
 		div.row
-			p #{show.results[0].name}
-		div.row
-			each sh in show.results
+			each sh in show
 					div.col-sm-6
 						p #{sh.popularity}
 						p #{sh.name}
