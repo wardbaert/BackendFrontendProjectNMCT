@@ -94,12 +94,12 @@ module.exports = function(passport) {
                 res.status(500).send('Server error occured while requesting ticket.');
                 res.end();
             }
-            res.render('seasondetail', { user: req.user, show: show });
+            res.render('seasondetail', { user: req.user, show: show, seriesID: req.params.sid });
         });
     });
-router.post('/episodedetail/:_id/:id/:sid/:eid', isAuthenticated, function(req, res) {
+    router.post('/episodedetail/:_id/:id/:sid/:eid', isAuthenticated, function(req, res) {
         console.log("teeest");
-        userrepo.markEpisodeAsWatched(req.params._id, req.params.id,req.params.sid,req.params.eid, function(err, user) {
+        userrepo.markEpisodeAsWatched(req.params._id, req.params.id, req.params.sid, req.params.eid, function(err, user) {
             // console.log(user);
             if (err) {
                 res.status(500).send('Server error occured while requesting ticket.');

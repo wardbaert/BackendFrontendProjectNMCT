@@ -93,19 +93,19 @@ series: {$nin: [id]}},
                 if (error) { console.log(error); } else { console.log(doc); }
             });
         },
-       /* markEpisodeAsWatched = function(userid, seriesid, seasonid, episodeid) {
-            console.log("userid "+userid+"seriesid "+seriesid+"seasonid "+ seasonid+ "episodeid");
-             var seasonEpisodeID = seasonid.concat("0").concat(episodeid);
-            console.log("seasonEpisodeID "+ seasonEpisodeID);
-            var query = { _id: userid, 'series.seriesID': seriesid, 'series.EpisodesWatched._id': { '$ne': episodeid }, 'series.EpisodesWatched.seasonid': seasonid };
-            var watchedepisode = { _id: episodeid, seasonid: seasonid, skipped: false };
-            var update = { $push: { 'series.EpisodesWatched': watchedepisode } };
+        /* markEpisodeAsWatched = function(userid, seriesid, seasonid, episodeid) {
+             console.log("userid "+userid+"seriesid "+seriesid+"seasonid "+ seasonid+ "episodeid");
+              var seasonEpisodeID = seasonid.concat("0").concat(episodeid);
+             console.log("seasonEpisodeID "+ seasonEpisodeID);
+             var query = { _id: userid, 'series.seriesID': seriesid, 'series.EpisodesWatched._id': { '$ne': episodeid }, 'series.EpisodesWatched.seasonid': seasonid };
+             var watchedepisode = { _id: episodeid, seasonid: seasonid, skipped: false };
+             var update = { $push: { 'series.EpisodesWatched': watchedepisode } };
 
-            user.findOneAndUpdate(query, update, { new: true }, function(error, doc) {
-                if (error) { console.log(error); } else { console.log(doc); }
-            });
-        };*/
-     /*   markEpisodeAsWatched = function(userid, seriesid, seasonid, episodeid) {
+             user.findOneAndUpdate(query, update, { new: true }, function(error, doc) {
+                 if (error) { console.log(error); } else { console.log(doc); }
+             });
+         };*/
+        /*   markEpisodeAsWatched = function(userid, seriesid, seasonid, episodeid) {
             console.log("userID "+ userid + "serieID "+ seriesid+"seasonID "+ seasonid+ "episodeID "+episodeid);
            
             var query = {
@@ -123,19 +123,21 @@ series: {$nin: [id]}},
             });
 };*/
         markEpisodeAsWatched = function(userid, seriesid, seasonid, episodeid) {
+            var watchedepisode = { episodeID: episodeid, seasonID: seasonid, skipped: false };
             var query = {
                 _id: userid,
                 'series.seriesID': seriesid,
-                $and: [
+                $or: [
                     { 'series.EpisodesWatched.episodeID': { '$ne': episodeid } },
                     { 'series.EpisodesWatched.seasonID': { '$ne': seasonid } }
                 ]
             };
-            var watchedepisode = { episodeID: episodeid, seasonID: seasonid, skipped: false };
-            var update = { $push: { 'series.EpisodesWatched': watchedepisode } };
 
-            user.findOneAndUpdate(query, update, { new: true }, function(error, doc) {
-                if (error) { console.log(error); } else { console.log(doc); }
+            var update = { $push: { 'series.$.EpisodesWatched': watchedepisode } };
+            User.findOneAndUpdate(query, update, { new: true }, function(error, doc) {
+                if (error) { console.log(error); } else {
+                    console.log(doc);
+                }
             });
         };
     /*updateSeriesUser = function(userid, seriesid) {

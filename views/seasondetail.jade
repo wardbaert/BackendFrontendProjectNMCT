@@ -22,6 +22,6 @@ block content
 								p #{episode.overview}
 								a(href='/episodedetail/' + show.id +"/"+ show.season_number+"/"+episode.episode_number).btn.btn-default info
 								if user
-									form(action='/episodedetail/' + user._id + "/" + show.id + "/" + show.season_number +"/"+ episode.episode_number, method="post", role="form")
+									form(action='/episodedetail/' + user._id + "/" + seriesID + "/" + show.season_number +"/"+ episode.episode_number, method="post", role="form")
 										.form-group
 											input(type="submit" value="Submit").btn.btn-default
