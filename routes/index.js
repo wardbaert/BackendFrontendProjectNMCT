@@ -36,7 +36,7 @@ module.exports = function(passport) {
 
     /* Handle Login POST */
     router.post('/login', passport.authenticate('login', {
-        successRedirect: '/home',
+        successRedirect: '/',
         failureRedirect: '/',
         failureFlash: true
     }));
@@ -54,11 +54,11 @@ module.exports = function(passport) {
     }));
 
     /* GET Home Page */
-     router.get('/home', isAuthenticated, function(req, res) {
+    router.get('/home', isAuthenticated, function(req, res) {
         showrepo.getSeriesByUser(req.user, function(err, show) {
             console.log(err);
             console.log("HOMEPAGE INDEX.JS");
-             console.log(JSON.stringify(show, null, 10)); 
+            console.log(JSON.stringify(show, null, 10));
             res.render('home', {
                 title: 'express',
                 user: req.user,
@@ -67,7 +67,6 @@ module.exports = function(passport) {
         });
     });
     router.post('/detail/:_id/:id', isAuthenticated, function(req, res) {
-        console.log("teeest");
         userrepo.updateSeriesUser(req.params._id, req.params.id, function(err, user) {
             // console.log(user);
             if (err) {
@@ -79,7 +78,6 @@ module.exports = function(passport) {
     });
     router.get('/detail/:id', function(req, res) {
         showrepo.getSeriesById(req.params.id, function(err, show) {
-            console.log(show);
             if (err) {
                 res.status(500).send('Server error occured while requesting ticket.');
                 res.end();
@@ -90,7 +88,6 @@ module.exports = function(passport) {
 
     router.get('/seasondetail/:sid/:seid', function(req, res) {
         showrepo.getSeasonById(req.params.sid, req.params.seid, function(err, show) {
-            console.log(show);
             if (err) {
                 res.status(500).send('Server error occured while requesting ticket.');
                 res.end();

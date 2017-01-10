@@ -1,7 +1,7 @@
 var mongoose = require("mongoose");
 var WatchedSeriesSchema = require("../schemas/watchedSeries");
 //var initializer = require("../initializerCollections");
-//var Promise = require("q");
+var q = require("q");
 
 var UsersRepo = (function() {
     var User = require("./user.js");
@@ -84,13 +84,29 @@ series: {$nin: [id]}},
             });
         },
         */
-    var updateSeriesUser = function(userid, seriesid) {
+    /* var updateSeriesUser = function(userid, seriesid) {
+            console.log(userid, seriesid);
+            return q.Promise(function(resolve, reject) {
+                var query = { _id: User._id, 'series.seriesID': { '$ne': seriesid } };
+                var series = { seriesID: seriesid, EpisodesWatched: [] };
+                var update = { $push: { 'series': series } };
+
+                User.findOneAndUpdate(query, update, { new: true }, function(error, doc) {
+                    if (error) { reject(error); } else { console.log(doc);
+                        resolve(doc); }
+                });
+            })
+}*/
+    var updateSeriesUser = function(userid, seriesid, next) {
             var query = { _id: userid, 'series.seriesID': { '$ne': seriesid } };
             var series = { seriesID: seriesid, EpisodesWatched: [] };
             var update = { $push: { 'series': series } };
 
             User.findOneAndUpdate(query, update, { new: true }, function(error, doc) {
-                if (error) { console.log(error); } else { console.log(doc); }
+                if (error) { next(err, null) } else {
+                    console.log("document updated", doc);
+                    next(null, doc);
+                }
             });
         },
         /* markEpisodeAsWatched = function(userid, seriesid, seasonid, episodeid) {
@@ -122,7 +138,7 @@ series: {$nin: [id]}},
                 if (error) { console.log(error); } else { console.log(doc); }
             });
 };*/
-        markEpisodeAsWatched = function(userid, seriesid, seasonid, episodeid) {
+        markEpisodeAsWatched = function(userid, seriesid, seasonid, episodeid, next) {
             var watchedepisode = { episodeID: episodeid, seasonID: seasonid, skipped: false };
             var query = {
                 _id: userid,
@@ -135,7 +151,11 @@ series: {$nin: [id]}},
 
             var update = { $push: { 'series.$.EpisodesWatched': watchedepisode } };
             User.findOneAndUpdate(query, update, { new: true }, function(error, doc) {
-                if (error) { console.log(error); } else {
+                if (error) {
+                    console.log(error);
+                    next(error, null);
+                } else {
+                    next(null, doc);
                     console.log(doc);
                 }
             });
