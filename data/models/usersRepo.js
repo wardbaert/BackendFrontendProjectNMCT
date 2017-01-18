@@ -140,23 +140,27 @@ series: {$nin: [id]}},
 };*/
         markEpisodeAsWatched = function(userid, seriesid, seasonid, episodeid, next) {
             var watchedepisode = { episodeID: episodeid, seasonID: seasonid, skipped: false };
+
             var query = {
                 _id: userid,
-                'series.seriesID': seriesid,
-                $or: [
-                    { 'series.EpisodesWatched.episodeID': { '$ne': episodeid } },
-                    { 'series.EpisodesWatched.seasonID': { '$ne': seasonid } }
-                ]
+                series: {
+                    $elemMatch: {
+                        seriesID: seriesid,
+                        EpisodesWatched: {
+                            $not: {
+                                $elemMatch: { episodeID: episodeid, seasonID: seasonid }
+                            }
+                        }
+                    }
+                }
             };
 
             var update = { $push: { 'series.$.EpisodesWatched': watchedepisode } };
             User.findOneAndUpdate(query, update, { new: true }, function(error, doc) {
                 if (error) {
-                    console.log(error);
                     next(error, null);
                 } else {
                     next(null, doc);
-                    console.log(doc);
                 }
             });
         };
