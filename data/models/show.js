@@ -98,19 +98,23 @@ showrepo = (function() {
             });
         }
 
+        if (user.series.length == 0) {
+            next(null, null)
+        } else {
+            user.series.forEach(function(id) {
+                getdata(id, function(err, res) {
+                    console.log("res " + res);
+                    userSeries.push(res);
+                    count++;
+                    console.log("COUNT" + count)
+                    console.log("plzzzzz" + userSeries);
+                    if (count === user.series.length) {
+                        callback(userSeries);
+                    }
+                })
+            });
+        }
 
-        user.series.forEach(function(id) {
-            getdata(id, function(err, res) {
-                console.log("res " + res);
-                userSeries.push(res);
-                count++;
-                console.log("COUNT" + count)
-                console.log("plzzzzz" + userSeries);
-                if (count === user.series.length) {
-                    callback(userSeries);
-                }
-            })
-        });
         /*MovieDB.tvInfo({ id: user.series[2].seriesID }, function(err, serie) {
                     console.log(JSON.stringify(serie, null, 10)); 
                     next(err, serie);                

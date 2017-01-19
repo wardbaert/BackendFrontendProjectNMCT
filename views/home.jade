@@ -13,9 +13,11 @@ block content
 								li First Name ---> #{user.firstName} 
 								li Last Name ---> #{user.lastName}
 		div.row
+		if show
 			each sh in show
 					div.col-sm-6
 						p #{sh.popularity}
 						p #{sh.name}
 						img(src='https://image.tmdb.org/t/p/w300_and_h450_bestv2#{sh.poster_path}')
-									
+		else
+			p #[span Welcome select new shows]							
