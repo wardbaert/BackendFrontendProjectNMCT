@@ -3,19 +3,29 @@ block content
 	div.container
 		div.row
 			div.col-sm-6.col-md-4.col-md-offset-10
+
+		div.container
 			if user
-				#user
-					p: #[span Welcome #{user.firstName}] #[a(href='/signout', title='sign out') Sign out]					
-						//-div.signup-wall
-							ul.user-details
-								li Username ---> #{user.username}
-								li Email    ---> #{user.email}
-								li First Name ---> #{user.firstName} 
-								li Last Name ---> #{user.lastName}
-		div.row
-			h1 #{show.name}
-			each season in show.seasons
-					div.col-sm-6
+				- var shows = user.series.map(function(c) { return c.seriesID })
+			div.row
+				div.col-md-4.offset-md-3
+					img.pull-left(class="head" src='https://image.tmdb.org/t/p/w1000#{show.poster_path}')
+				div.col-md-6.offset-md-1
+					h1 #{show.name}
+					p #{show.overview}
+					if user
+									if (shows.indexOf(show.id) === -1)
+										form(action='/detail/' + user._id + "/" + show.id, method="post", role="form")
+											.form-group
+												input(type="submit" value="Follow").btn.btn-default
+									else
+										form(action='/detail/' + user._id + "/" + show.id, method="post", role="form")
+											.form-group
+												input(type="submit" value="unFollow").btn.btn-default
+
+			div.row
+				each season in show.seasons
+					div.col-sm-4
 						div.thumbnail.clearfix
 							img.pull-left(src='https://image.tmdb.org/t/p/w185#{season.poster_path}')
 							div.caption

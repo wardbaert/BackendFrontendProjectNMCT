@@ -18,8 +18,8 @@ module.exports = function(passport) {
     /* GET index page. */
     router.get('/', function(req, res) {
         showrepo.getSeries(function(err, show) {
-            console.log(err);
-            console.log(show);
+           // console.log(err);
+            //console.log(show);
             res.render('index', {
                 title: 'express',
                 user: req.user,
@@ -56,9 +56,9 @@ module.exports = function(passport) {
     /* GET Home Page */
     router.get('/home', isAuthenticated, function(req, res) {
         showrepo.getSeriesByUser(req.user, function(err, show) {
-            console.log(err);
-            console.log("HOMEPAGE INDEX.JS");
-            console.log(JSON.stringify(show, null, 10));
+           // console.log(err);
+            //console.log("HOMEPAGE INDEX.JS");
+            //console.log(JSON.stringify(show, null, 10));
             res.render('home', {
                 title: 'express',
                 user: req.user,
@@ -96,7 +96,7 @@ module.exports = function(passport) {
         });
     });
     router.post('/episodedetail/:_id/:id/:sid/:eid', isAuthenticated, function(req, res) {
-        console.log("teeest");
+        //console.log("teeest");
         userrepo.markEpisodeAsWatched(req.params._id, req.params.id, req.params.sid, req.params.eid, function(err, user) {
             // console.log(user);
             if (err) {
@@ -104,6 +104,20 @@ module.exports = function(passport) {
                 res.end();
             }
             res.redirect("/");
+        })
+    });
+    router.get('/searchSerie/:_name', function(req, res){
+        showrepo.getSeriesByName(req.params._name, function(err, show){
+            if(err){
+                res.status(500).send('Server error occured while requesting ticket.');
+                res.end();
+            }
+           res.json(show);
+           /*  res.render('index', {
+                title: 'express',
+                user: req.user,
+                show: show
+            });*/
         })
     });
     /* Handle Logout */
