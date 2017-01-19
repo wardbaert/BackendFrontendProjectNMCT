@@ -28,9 +28,9 @@ showrepo = (function() {
     };
 
     var getSeriesById = function(id, next) {
-        //console.log("GETSERIESBYID"+id);
+        console.log("GETSERIESBYID" + id);
         MovieDB.tvInfo({ id: id }, function(err, serie) {
-          //  console.log("GETSERIESBYID"+err, serie);
+            console.log("GETSERIESBYID" + err, serie);
             next(err, serie);
         });
     }
@@ -41,38 +41,124 @@ showrepo = (function() {
             next(err, serie);
         });
     }
-     var getSeriesByUser = function(user, next) {
-      var userSeries = []
-      var count = 0;
-
-      function callback (items) { next(null,items); }
-      var getdata = function(id, nexte){
-        MovieDB.tvInfo({id:id.seriesID},function(err, serie){
-         //  console.log("#serie " + serie); 
-           nexte(err, serie);
-        });} 
+      var getNextEpisodesByUser = function(user, next) {
 
 
-       user.series.forEach(function(id){
-        getdata(id, function(err, res){
-           // console.log("res "+res);
-            userSeries.push(res);
-            count++;
-           // console.log("COUNT"+count)
-        //console.log("plzzzzz"+userSeries);
-        if(count === user.series.length){
-            callback(userSeries);
+
+        getSeriesByUser(user, function(err, series) {
+
+            var collection = [];
+
+            for (let k = 0; k < series.length; k++) {
+
+
+
+                var info = series[k];
+
+                console.log("INFO");
+
+                console.log(info);
+
+                var nos = info.seasons.length - 1;
+
+                console.log("seasons length= ", nos);
+
+                ietslabel:
+
+                    for (let i = 1; i <= nos; i++) {
+
+                        //episodecount
+
+                        var ec = info.seasons[i].episode_count
+
+                        console.log("episodes: ", ec);
+
+                        for (let j = 1; j <= ec; j++) {
+
+                            var serieselect = user.series.filter(function(v) {
+
+                                return v.seriesID == info.id
+
+                            })
+
+
+
+                            if (serieselect.length == 0) {
+
+                                console.log("No episodes watched")
+
+                                console.log({ 'seriesid': info.id, 'eid': j, 'sid': i });
+
+                                collection.push({ 'seriesid': info.id, 'eid': j, 'sid': i });
+
+                            } else {
+
+                                console.log("Episodes Watched true")
+
+                                var epi = serieselect[0].EpisodesWatched.filter(function(v) {
+
+                                    return v.episodeID == j && v.seasonID == i
+
+                                })
+
+                                if (epi.length == 0) {
+
+                                    console.log({ 'seriesid': info.id, 'eid': j, 'sid': i });
+
+                                    collection.push({ 'seriesid': info.id, 'eid': j, 'sid': i });
+
+                                } else {
+
+                                    continue;
+
+                                }
+
+                            }
+
+                            break ietslabel;
+
+                        }
+
+                    }
+
+            }
+
+            console.log(collection)
+
+            next(collection);
+
+        })
+
+    }
+    var getSeriesByUser = function(user, next) {
+        var userSeries = []
+        var count = 0;
+
+        function callback(items) { next(null, items); }
+        var getdata = function(id, nexte) {
+            MovieDB.tvInfo({ id: id.seriesID }, function(err, serie) {
+                console.log("#serie " + serie);
+                nexte(err, serie);
+            });
         }
-        })    
-       });  
-        /*MovieDB.tvInfo({ id: user.series[2].seriesID }, function(err, serie) {
-                    console.log(JSON.stringify(serie, null, 10)); 
-                    next(err, serie);                
-                });     
-                /*MovieDB.tvInfo({ id: "44217" }, function(err, serie) {
-                    console.log("#serie " + serie); 
-                    next(err, serie);                
-                });           */         
+
+        if (user.series.length == 0) {
+            next(null, null)
+        } else {
+            user.series.forEach(function(id) {
+                getdata(id, function(err, res) {
+                    console.log("res " + res);
+                    userSeries.push(res);
+                    count++;
+                    console.log("COUNT" + count)
+                    console.log("plzzzzz" + userSeries);
+                    if (count === user.series.length) {
+                        callback(userSeries);
+                    }
+                })
+            });
+        }
+      
         }
         var getSeriesByName = function(name, next){
             console.log("name "+name);
@@ -82,11 +168,12 @@ showrepo = (function() {
                 });
         }
     return {
-        getSeriesByName:getSeriesByName,
-        getSeriesByUser:getSeriesByUser,
+         getSeriesByName:getSeriesByName,
+        getSeriesByUser: getSeriesByUser,
         getSeasonById: getSeasonById,
         getSeries: getSeries,
-        getSeriesById: getSeriesById
+        getSeriesById: getSeriesById,
+        getNextEpisodesByUser: getNextEpisodesByUser
     };
 })();
 

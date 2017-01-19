@@ -56,9 +56,6 @@ module.exports = function(passport) {
     /* GET Home Page */
     router.get('/home', isAuthenticated, function(req, res) {
         showrepo.getSeriesByUser(req.user, function(err, show) {
-           // console.log(err);
-            //console.log("HOMEPAGE INDEX.JS");
-            //console.log(JSON.stringify(show, null, 10));
             res.render('home', {
                 title: 'express',
                 user: req.user,
